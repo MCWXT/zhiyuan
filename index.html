@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宝鸡志愿者之家 - 招募与展示平台</title>
+    <style>
+        :root {
+            --primary-color: #e74c3c; /* 志愿者红 */
+            --secondary-color: #f39c12;
+            --bg-color: #f4f6f9;
+            --text-color: #333;
+            --card-bg: #fff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei", sans-serif; }
+        
+        body { background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; }
+
+        /* 头部样式 */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #c0392b);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        header p { font-size: 1.2rem; opacity: 0.9; }
+        .location-tag { background: rgba(255,255,255,0.2); padding: 5px 15px; border-radius: 20px; display: inline-block; margin-top: 10px; }
+
+        /* 容器 */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* 查询区域 */
+        .search-section {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-top: -30px; /* 上移重叠效果 */
+            text-align: center;
+        }
+        .search-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        input[type="text"] {
+            padding: 12px 20px;
+            width: 300px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus { border-color: var(--primary-color); }
+        button {
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #c0392b; }
+
+        /* 结果显示区域 */
+        #result-area {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            display: none; /* 默认隐藏 */
+            background: #fafafa;
+        }
+        .cert-image {
+            max-width: 100%;
+            height: auto;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .error-msg { color: red; font-weight: bold; }
+
+        /* 志愿者展示网格 */
+        .gallery-section { margin-top: 50px; }
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--primary-color);
+            margin: 10px auto;
+        }
+
+        .volunteer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .volunteer-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s;
+        }
+        .volunteer-card:hover { transform: translateY(-5px); }
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #eee;
+        }
+        .card-body { padding: 20px; }
+        .card-name { font-size: 1.2rem; font-weight: bold; color: #2c3e50; }
+        .card-desc { font-size: 0.9rem; color: #7f8c8d; margin-top: 8px; }
+        .card-badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2ecc71;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 50px;
+            color: #7f8c8d;
+            border-top: 1px solid #eee;
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 600px) {
+            header h1 { font-size: 1.8rem; }
+            .search-box { flex-direction: column; align-items: center; }
+            input[type="text"] { width: 100%; }
+            button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>宝鸡志愿者之家</h1>
+        <p>弘扬志愿精神 · 建设美好宝鸡</p>
+        <div class="location-tag">📍 服务地点：陕西省宝鸡市</div>
+    </div>
+</header>
+
+<div class="container">
+    <!-- 查询功能区 -->
+    <section class="search-section">
+        <h2>志愿者证书查询</h2>
+        <p style="color: #666; font-size: 0.9rem; margin-top: 5px;">输入志愿者姓名，即可查看电子志愿证明</p>
+        <div class="search-box">
+            <input type="text" id="volunteerName" placeholder="请输入志愿者姓名...">
+            <button onclick="searchVolunteer()">查询证明</button>
+        </div>
+        
+        <div id="result-area">
+            <h3 id="result-title"></h3>
+            <img id="result-image" src="" alt="志愿证明" class="cert-image">
+            <p style="text-align: center; margin-top: 10px; color: #666;" id="result-desc"></p>
+        </div>
+    </section>
+
+    <!-- 志愿者展示区 -->
+    <section class="gallery-section">
+        <h2 class="section-title">优秀志愿者风采</h2>
+        <div class="volunteer-grid" id="volunteerGrid">
+            <!-- 志愿者卡片将通过JS动态生成 -->
+        </div>
+    </section>
+</div>
+
+<footer>
+    <p>&copy; 2026 宝鸡志愿者服务平台 | 助力公益，你我同行</p>
+    <p>技术支持：静态HTML架构 | 可扩展数据源</p>
+</footer>
+
+<script>
+    /**
+     * ==========================================
+     * 数据配置区 (在此处添加更多志愿者)
+     * ==========================================
+     * 
+     * 如何添加新志愿者：
+     * 1. 复制一个大括号内的对象 {...},
+     * 2. 修改 name (姓名), image (风采照), certImage (证书照), desc (描述)
+     * 3. 确保 name 字段与查询时输入的姓名完全一致
+     */
+    const volunteersData = [
+        {
+            name: "吴兴涛",
+            image: "/1754BC042715BF329290FB078694F570.jpg", // 替换为实际图片路径
+            certImage: "https://placehold.co/600x400/2ecc71/white?text=志愿证明:+吴兴涛\n服务时长:8小时\n颁发日期:2026-03", // 替换为实际证书图片
+            desc: "热心，有毅力的社区志愿者",
+            badge: "志愿者"
+        },
+        {
+            name: "杨思涵",
+            image: "/4ACF35751A3E66D622D8ED76ADC04F82.jpg",
+            certImage: "https://placehold.co/600x400/2ecc71/white?text=志愿证明:+杨思涵\n服务时长:7小时",
+            desc: "小环保宣传员，致力于社区垃圾清理。",
+            badge: "环保先锋"
+        },
+        {
+            name: "赵家童",
+            image: "/8409463208654D9386A156DE4BA199C2.jpg",
+            certImage: "https://placehold.co/600x400/2ecc71/white?text=志愿证明:+赵家童\n服务时长:9小时",
+            desc: "安全宣传，风雨无阻。",
+            badge: "优秀新人"
+        },
+        // 在这里复制上面的块来添加更多人...
+        {
+            name: "汪俊辰",
+            image: "/E6234179BE99B9442440CCEA2AE53A2F.jpg",
+            certImage: "https://placehold.co/600x400/2ecc71/white?text=志愿证明:+汪俊辰\n服务时长:200小时",
+            desc: "职教志愿者，关爱留守老人。",
+            badge: "爱心大使"
+        }
+    ];
+
+    /**
+     * 初始化页面：渲染志愿者列表
+     */
+    function initGallery() {
+        const grid = document.getElementById('volunteerGrid');
+        let htmlContent = '';
+
+        volunteersData.forEach(vol => {
+            htmlContent += `
+                <div class="volunteer-card">
+                    <img src="${vol.image}" alt="${vol.name}" class="card-img">
+                    <div class="card-body">
+                        <div class="card-name">${vol.name}</div>
+                        <div class="card-desc">${vol.desc}</div>
+                        <span class="card-badge">${vol.badge}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        grid.innerHTML = htmlContent;
+    }
+
+    /**
+     * 查询功能逻辑
+     */
+    function searchVolunteer() {
+        const inputName = document.getElementById('volunteerName').value.trim();
+        const resultArea = document.getElementById('result-area');
+        const resultTitle = document.getElementById('result-title');
+        const resultImage = document.getElementById('result-image');
+        const resultDesc = document.getElementById('result-desc');
+
+        if (!inputName) {
+            alert("请输入志愿者姓名！");
+            return;
+        }
+
+        // 查找数据 (支持模糊匹配或精确匹配，这里使用精确匹配，不区分大小写)
+        const volunteer = volunteersData.find(v => v.name === inputName);
+
+        if (volunteer) {
+            // 找到结果
+            resultArea.style.display = 'block';
+            resultArea.style.border = "1px solid #2ecc71";
+            resultArea.style.backgroundColor = "#f0fff4";
+            
+            resultTitle.innerText = `✅ 找到志愿者：${volunteer.name}`;
+            resultTitle.style.color = "#27ae60";
+            
+            resultImage.src = volunteer.certImage;
+            resultImage.alt = `${volunteer.name}的志愿证明`;
+            
+            resultDesc.innerText = `证书状态：有效 | 所属地区：陕西宝鸡眉县`;
+        } else {
+            // 未找到结果
+            resultArea.style.display = 'block';
+            resultArea.style.border = "1px solid #e74c3c";
+            resultArea.style.backgroundColor = "#fff5f5";
+            
+            resultTitle.innerText = "❌ 未找到该志愿者";
+            resultTitle.style.color = "#c0392b";
+            
+            resultImage.src = ""; // 清空图片
+            resultDesc.innerHTML = `<span class="error-msg">抱歉，数据库中暂无名为 "${inputName}" 的志愿者记录。<br>请检查姓名输入是否正确，或联系管理员录入。</span>`;
+        }
+    }
+
+    // 支持回车键搜索
+    document.getElementById('volunteerName').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            searchVolunteer();
+        }
+    });
+
+    // 页面加载完成后执行
+    window.onload = initGallery;
+
+</script>
+
+</body>
+</html>
